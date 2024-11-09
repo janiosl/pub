@@ -1,7 +1,5 @@
 library(reticulate)
-use_python("C:/Python39")
-source_python("https://raw.githubusercontent.com/janiosl/python.ds/refs/heads/master/py_poo/pr_work/deost_ad.py")
-#('C:/Users/janio/AppData/Local/r-miniconda/envs/r-reticulate/python.exe')
+source_python("https://raw.githubusercontent.com/janiosl/pub/refs/heads/main/deost/deost_ad.py")
 
 library(daltoolbox)
 library(dalevents)
