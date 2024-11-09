@@ -10,7 +10,7 @@ import pandas as pd
 from matplotlib import pyplot as plt
 
 #Loading data
-entrada = 'gecco.csv'
+entrada = 'examples/data/gecco.csv'
 gecco = pd.read_csv(entrada)
 
 #Data analysis
