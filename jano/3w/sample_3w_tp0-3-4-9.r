@@ -1,5 +1,6 @@
 #Replace this line using your own path
 caminho <- "E://Users//janio//Documents//Education//Mestrado e Doutorado//CEFET//2. Pesquisa//DAL_Events//GitHub//dal//event_datasets_etl//original_datasets//3W//data//grouped"
+caminho <- "D://git//pub//jano//3w"
 setwd(caminho)
 
 
@@ -53,7 +54,7 @@ save(data_3w_tp3_sample, file=out_tp3)
 
 
 #Real-world
-files <- c("WELL-00001_20170320120025", "WELL-00014_20170917190000", "WELL-00014_20170917140000")
+files <- c("WELL-00001_20170320120025", "WELL-00014_20170917190000", "WELL-00014_20170917140000", "WELL-00014_20170918010114")
 
 #Sample
 data_3w_tp3_real_sample <- list()
@@ -66,6 +67,10 @@ names(data_3w_tp3_real_sample) <- files
 
 #Plot
 plot(as.ts(data_3w_tp3_real_sample$`WELL-00001_20170320120025`$`T-TPT`))
+
+
+data_3w_tp3_real_sample_exp[[4]] <- read_parquet("3/WELL-00014_20170918010114.parquet")
+
 
 #Save Rdata
 out_tp3_real <- "parquet/data_3w_tp3_real_sample.RData"
@@ -88,15 +93,21 @@ summary(d2)
 d3 <- data_3w_tp3_real_sample$`WELL-00014_20170917140000`[,features_paper]
 summary(d3)
 
+d4 <- data_3w_tp3_real_sample_exp[[4]][,features_paper]
+
 data_3w_tp3_real_sample_exp <- list()
 data_3w_tp3_real_sample_exp[[1]] <- d1
 data_3w_tp3_real_sample_exp[[2]] <- d2
 data_3w_tp3_real_sample_exp[[3]] <- d3
+data_3w_tp3_real_sample_exp[[4]] <- d4
 
 names(data_3w_tp3_real_sample_exp) <- files
 
+plot(as.ts(data_3w_tp3_real_sample_exp[[4]][,c(1,2,3,4,6,7)]))
+
 #Save Rdata
 out_tp3_real_exp <- "parquet/3/data_3w_tp3_real_sample_exp.RData"
+out_tp3_real_exp <- "3/data_3w_tp3_real_sample_exp.RData"
 save(data_3w_tp3_real_sample_exp, file=out_tp3_real_exp)
 
 #Type 4 -------------------------------
