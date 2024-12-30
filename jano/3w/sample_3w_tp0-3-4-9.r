@@ -111,7 +111,7 @@ out_tp3_real_exp <- "3/data_3w_tp3_real_sample_exp.RData"
 save(data_3w_tp3_real_sample_exp, file=out_tp3_real_exp)
 
 #Type 4 -------------------------------
-files <- c("WELL-00001_20170316110203", "WELL-00001_20170316130000", "WELL-00001_20170316150005")
+files <- c("WELL-00001_20170316110203", "WELL-00001_20170316130000", "WELL-00001_20170316150005", "WELL-00001_20170316170000")
 
 #Sample
 data_3w_tp4_sample <- list()
@@ -120,6 +120,9 @@ for (i in 1:3){
   data_3w_tp4_sample[[i]] <- read_parquet(paste("parquet/4/", files[i], ".parquet", sep=""))
 }
 
+
+data_3w_tp4_sample[[4]] <- read_parquet("4/WELL-00001_20170316170000.parquet")
+
 names(data_3w_tp4_sample) <- files
 
 
@@ -127,9 +130,40 @@ names(data_3w_tp4_sample) <- files
 plot(as.ts(data_3w_tp4_sample$`WELL-00001_20170316110203`$`P-TPT`))
 
 #Save Rdata
-out_tp4 <- "parquet/4/data_3w_tp4_sample.RData"
+out_tp4 <- "4/data_3w_tp4_sample.RData"
 save(data_3w_tp4_sample, file=out_tp4)
 
+
+
+##############################
+d1 <- data_3w_tp4_sample[[1]][,features_paper]
+summary(d1)
+
+d2 <- data_3w_tp4_sample[[2]][,features_paper]
+summary(d2)
+
+d3 <- data_3w_tp4_sample[[3]][,features_paper]
+summary(d3)
+
+d4 <- data_3w_tp4_sample[[4]][,features_paper]
+summary(d4)
+
+
+data_3w_tp4_real_sample_exp <- list()
+data_3w_tp4_real_sample_exp[[1]] <- d1
+data_3w_tp4_real_sample_exp[[2]] <- d2
+data_3w_tp4_real_sample_exp[[3]] <- d3
+data_3w_tp4_real_sample_exp[[4]] <- d4
+
+names(data_3w_tp3_real_sample_exp) <- files
+
+plot(as.ts(data_3w_tp4_real_sample_exp[[4]][,c(1,2,3,4,6,7)]))
+
+#Save Rdata
+out_tp4_real_exp <- "4/data_3w_tp4_real_sample_exp.RData"
+save(data_3w_tp4_real_sample_exp, file=out_tp4_real_exp)
+
+###############################
 
 
 #Type 9 -------------------------------
