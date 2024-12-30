@@ -95,7 +95,9 @@ data_3w_tp3_real_sample_exp[[3]] <- d3
 
 names(data_3w_tp3_real_sample_exp) <- files
 
-
+#Save Rdata
+out_tp3_real_exp <- "parquet/3/data_3w_tp3_real_sample_exp.RData"
+save(data_3w_tp3_real_sample_exp, file=out_tp3_real_exp)
 
 #Type 4 -------------------------------
 files <- c("WELL-00001_20170316110203", "WELL-00001_20170316130000", "WELL-00001_20170316150005")
