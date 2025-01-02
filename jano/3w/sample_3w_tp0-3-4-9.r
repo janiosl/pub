@@ -155,7 +155,7 @@ data_3w_tp4_real_sample_exp[[2]] <- d2
 data_3w_tp4_real_sample_exp[[3]] <- d3
 data_3w_tp4_real_sample_exp[[4]] <- d4
 
-names(data_3w_tp3_real_sample_exp) <- files
+names(data_3w_tp4_real_sample_exp) <- files
 
 plot(as.ts(data_3w_tp4_real_sample_exp[[4]][,c(1,2,3,4,6,7)]))
 
@@ -184,3 +184,12 @@ plot(as.ts(data_3w_tp9_sample$SIMULATED_00001$`T-TPT`))
 #Save Rdata
 out_tp9 <- "parquet/9/data_3w_tp9_sample.RData"
 save(data_3w_tp9_sample, file=out_tp9)
+
+
+
+
+# Loading -----------------------------------------------------------------
+load("3//data_3w_tp3_real_sample_exp.RData")
+load("4//data_3w_tp4_real_sample_exp.RData")
+
+df <- as.data.frame(data_3w_tp4_real_sample_exp$)
