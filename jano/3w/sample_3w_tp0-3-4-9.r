@@ -1,7 +1,10 @@
 #Replace this line using your own path
 caminho <- "E://Users//janio//Documents//Education//Mestrado e Doutorado//CEFET//2. Pesquisa//DAL_Events//GitHub//dal//event_datasets_etl//original_datasets//3W//data//grouped"
+caminho <- "D://git//pub//jano//3w"
 setwd(caminho)
 
+
+# Type0 -------------------------------------------------------------------
 load("oil_3w_Type_0.RData")
 
 sample_3w_tp0 <- oil_3w_Type_0$Type_0[1:3]
@@ -25,11 +28,12 @@ plot(as.ts(series$class),
 
 
 # Arquivos Parquet - Datasets ausentes ------------------------------------
-install.packages("arrow")
+#install.packages("arrow")
 library(arrow)
 
 
 #Type 3 -------------------------------
+#Simulated
 files <- c("SIMULATED_00001", "SIMULATED_00002", "SIMULATED_00003")
 
 #Sample
@@ -49,8 +53,65 @@ out_tp3 <- "parquet/data_3w_tp3_sample.RData"
 save(data_3w_tp3_sample, file=out_tp3)
 
 
+#Real-world
+files <- c("WELL-00001_20170320120025", "WELL-00014_20170917190000", "WELL-00014_20170917140000", "WELL-00014_20170918010114")
+
+#Sample
+data_3w_tp3_real_sample <- list()
+
+for (i in 1:3){
+  data_3w_tp3_real_sample[[i]] <- read_parquet(paste("parquet/3/", files[i], ".parquet", sep=""))
+}
+
+names(data_3w_tp3_real_sample) <- files
+
+#Plot
+plot(as.ts(data_3w_tp3_real_sample$`WELL-00001_20170320120025`$`T-TPT`))
+
+
+data_3w_tp3_real_sample_exp[[4]] <- read_parquet("3/WELL-00014_20170918010114.parquet")
+
+
+#Save Rdata
+out_tp3_real <- "parquet/data_3w_tp3_real_sample.RData"
+save(data_3w_tp3_real_sample, file=out_tp3_real)
+
+names(data_3w_tp3_real_sample$`WELL-00001_20170320120025`)
+
+
+#Features selection
+features_paper <- c("P-PDG","P-TPT", "T-TPT", "P-MON-CKP",
+                    "P-JUS-CKP", "P-JUS-CKGL", "QGL", "class")
+
+
+d1 <- data_3w_tp3_real_sample$`WELL-00001_20170320120025`[,features_paper]
+summary(d1)
+
+d2 <- data_3w_tp3_real_sample$`WELL-00014_20170917190000`[,features_paper]
+summary(d2)
+
+d3 <- data_3w_tp3_real_sample$`WELL-00014_20170917140000`[,features_paper]
+summary(d3)
+
+d4 <- data_3w_tp3_real_sample_exp[[4]][,features_paper]
+
+data_3w_tp3_real_sample_exp <- list()
+data_3w_tp3_real_sample_exp[[1]] <- d1
+data_3w_tp3_real_sample_exp[[2]] <- d2
+data_3w_tp3_real_sample_exp[[3]] <- d3
+data_3w_tp3_real_sample_exp[[4]] <- d4
+
+names(data_3w_tp3_real_sample_exp) <- files
+
+plot(as.ts(data_3w_tp3_real_sample_exp[[4]][,c(1,2,3,4,6,7)]))
+
+#Save Rdata
+out_tp3_real_exp <- "parquet/3/data_3w_tp3_real_sample_exp.RData"
+out_tp3_real_exp <- "3/data_3w_tp3_real_sample_exp.RData"
+save(data_3w_tp3_real_sample_exp, file=out_tp3_real_exp)
+
 #Type 4 -------------------------------
-files <- c("WELL-00001_20170316110203", "WELL-00001_20170316130000", "WELL-00001_20170316150005")
+files <- c("WELL-00001_20170316110203", "WELL-00001_20170316130000", "WELL-00001_20170316150005", "WELL-00001_20170316170000")
 
 #Sample
 data_3w_tp4_sample <- list()
@@ -59,6 +120,9 @@ for (i in 1:3){
   data_3w_tp4_sample[[i]] <- read_parquet(paste("parquet/4/", files[i], ".parquet", sep=""))
 }
 
+
+data_3w_tp4_sample[[4]] <- read_parquet("4/WELL-00001_20170316170000.parquet")
+
 names(data_3w_tp4_sample) <- files
 
 
@@ -66,9 +130,40 @@ names(data_3w_tp4_sample) <- files
 plot(as.ts(data_3w_tp4_sample$`WELL-00001_20170316110203`$`P-TPT`))
 
 #Save Rdata
-out_tp4 <- "parquet/4/data_3w_tp4_sample.RData"
+out_tp4 <- "4/data_3w_tp4_sample.RData"
 save(data_3w_tp4_sample, file=out_tp4)
 
+
+
+##############################
+d1 <- data_3w_tp4_sample[[1]][,features_paper]
+summary(d1)
+
+d2 <- data_3w_tp4_sample[[2]][,features_paper]
+summary(d2)
+
+d3 <- data_3w_tp4_sample[[3]][,features_paper]
+summary(d3)
+
+d4 <- data_3w_tp4_sample[[4]][,features_paper]
+summary(d4)
+
+
+data_3w_tp4_real_sample_exp <- list()
+data_3w_tp4_real_sample_exp[[1]] <- d1
+data_3w_tp4_real_sample_exp[[2]] <- d2
+data_3w_tp4_real_sample_exp[[3]] <- d3
+data_3w_tp4_real_sample_exp[[4]] <- d4
+
+names(data_3w_tp4_real_sample_exp) <- files
+
+plot(as.ts(data_3w_tp4_real_sample_exp[[4]][,c(1,2,3,4,6,7)]))
+
+#Save Rdata
+out_tp4_real_exp <- "4/data_3w_tp4_real_sample_exp.RData"
+save(data_3w_tp4_real_sample_exp, file=out_tp4_real_exp)
+
+###############################
 
 
 #Type 9 -------------------------------
@@ -89,3 +184,12 @@ plot(as.ts(data_3w_tp9_sample$SIMULATED_00001$`T-TPT`))
 #Save Rdata
 out_tp9 <- "parquet/9/data_3w_tp9_sample.RData"
 save(data_3w_tp9_sample, file=out_tp9)
+
+
+
+
+# Loading -----------------------------------------------------------------
+load("3//data_3w_tp3_real_sample_exp.RData")
+load("4//data_3w_tp4_real_sample_exp.RData")
+
+df <- as.data.frame(data_3w_tp4_real_sample_exp$)
