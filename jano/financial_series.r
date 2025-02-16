@@ -20,3 +20,4 @@ plot(ts(test), type = "l",
 
 
 plot(ts(fi_br$Commodity$`Oil Brent`), type = "l")
+plot(ts(fi_br$Interest_Rate$SELIC), type = "l")
