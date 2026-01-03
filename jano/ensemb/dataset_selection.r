@@ -46,16 +46,17 @@ names(nab_sample) <- c("AWSCloudwatch", "AdExchange", "artificialWithAnomaly")
 
 
 #Record ----
-dir <- "E:\\Users\\janio\\Documents\\Education\\Mestrado e Doutorado\\CEFET\\Doutorado\\DAL Reuniões\\Autoencoder\\Experiments"
+dir <- "DSc/pipeline_exp"
 setwd(dir=dir)
 
-save(gecco_sample, file="data\\gecco_sample.RData", compress = "xz")
-save(ucr_sample, file="data\\ucr_sample.RData", compress = "xz")
-save(yahoo_sample, file="data\\yahoo_sample.RData", compress = "xz")
-save(nab_sample, file="data\\nab_sample.RData", compress = "xz")
+save(gecco_sample, file="data/gecco_sample.RData", compress = "xz")
+save(ucr_sample, file="data/ucr_sample.RData", compress = "xz")
+save(yahoo_sample, file="data/yahoo_sample.RData", compress = "xz")
+save(nab_sample, file="data/nab_sample.RData", compress = "xz")
+
 
 #Load samples ----
-load(file="data\\gecco_sample.RData")
-load(file="data\\ucr_sample.RData")
-load(file="data\\yahoo_sample.RData")
-load(file="data\\nab_sample.RData")
+load(file="data/gecco_sample.RData")
+load(file="data/ucr_sample.RData")
+load(file="data/yahoo_sample.RData")
+load(file="data/nab_sample.RData")
