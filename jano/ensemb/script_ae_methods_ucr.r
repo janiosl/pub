@@ -6,7 +6,6 @@ library(daltoolboxdp)
 library(tspredit)
 library(harbinger)
 
-
 #Load datasets ----
 library(united)
 
@@ -38,55 +37,40 @@ setwd("DSc/pipeline_exp")
 load(file="data/ucr_sample.RData")
 
 #Rodar para cada grupo NAB
-nome_base <- paste("ucr1", names(ucr_sample[1]), sep = "_")
+#nome_base <- paste("ucr1", names(ucr_sample[1]), sep = "_")
 #nome_base <- paste("ucr2", names(ucr_sample[2]), sep = "_")
 #nome_base <- paste("ucr3", names(ucr_sample[3]), sep = "_")
-#nome_base <- paste("ucr4", names(ucr_sample[4]), sep = "_")
+nome_base <- paste("ucr4", names(ucr_sample[4]), sep = "_")
 
 # Fatiamos cada série no mesmo intervalo
 # OBS: ajuste este recorte se o tamanho das séries variar.
-series_ts <- vector("list", length(ucr_sample[[1]]))
+#series_ts <- vector("list", length(ucr_sample[[1]]))
 #series_ts <- vector("list", length(ucr_sample[[2]]))
 #series_ts <- vector("list", length(ucr_sample[[3]]))
-#series_ts <- vector("list", length(ucr_sample[[4]]))
+series_ts <- vector("list", length(ucr_sample[[4]]))
 
 
 for (i in seq_along(series_ts)) {
-  serie_nome <- names(ucr_sample[[1]])[i]
   #serie_nome <- names(ucr_sample[[1]])[i]
-  #serie_nome <- names(ucr_sample[[1]])[i]
-  #serie_nome <- names(ucr_sample[[1]])[i]
+  #serie_nome <- names(ucr_sample[[2]])[i]
+  #serie_nome <- names(ucr_sample[[3]])[i]
+  serie_nome <- names(ucr_sample[[4]])[i]
   
   # Verificação de limites para evitar erro se a série for menor
-  n <- nrow(ucr_sample[[1]][[i]])
+  #n <- nrow(ucr_sample[[1]][[i]])
   #n <- nrow(ucr_sample[[2]][[i]])
   #n <- nrow(ucr_sample[[3]][[i]])
-  #n <- nrow(ucr_sample[[4]][[i]])
-  
-  
-  #Trecho desativado para UCR, pois não faz sentido cortes tendo em vista
-  #forma como as anomalias são distribuídas neste datasets de maneira distinta
-  #para cada série.
-  
-  #inicio <- 1L
-  #fim    <- 4032L #NAB 1 e NAB3
-  #fim    <- 1538L #NAB 2 - Menor série do grupo (rodar todas com o mesmo tamanho)
+  n <- nrow(ucr_sample[[4]][[i]])
   
   if (is.null(n)) {
     stop(sprintf("Objeto %s não é um data.frame/ts esperado.", serie_nome))
   }
   
-  #Trecho desativado pelo mesmo motivo acima
-  #if (fim > n) {
-  #  stop(sprintf("Série %s tem apenas %d linhas; ajuste o recorte (%d:%d).",
-  #               serie_nome, n, inicio, fim))
-  #}
-  
   #Trecho ajustado para séries UCR
-  series_ts[[i]] <- ucr_sample[[1]][[i]]
+  #series_ts[[i]] <- ucr_sample[[1]][[i]]
   #series_ts[[i]] <- ucr_sample[[2]][[i]]
   #series_ts[[i]] <- ucr_sample[[3]][[i]]
-  #series_ts[[i]] <- ucr_sample[[4]][[i]]
+  series_ts[[i]] <- ucr_sample[[4]][[i]]
   
   names(series_ts)[i] <- serie_nome
 }

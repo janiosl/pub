@@ -6,7 +6,6 @@ library(daltoolboxdp)
 library(tspredit)
 library(harbinger)
 
-
 #Load datasets ----
 library(united)
 
@@ -30,41 +29,41 @@ setwd(dir=dir)
 load(file="data/ucr_sample.RData")
 
 #Rodar para cada grupo UCR
-nome_base <- paste("ucr1", names(ucr_sample[1]), sep = "_")
+#nome_base <- paste("ucr1", names(ucr_sample[1]), sep = "_")
 #nome_base <- paste("ucr2", names(ucr_sample[2]), sep = "_")
 #nome_base <- paste("ucr3", names(ucr_sample[3]), sep = "_")
-#nome_base <- paste("ucr4", names(ucr_sample[4]), sep = "_")
+nome_base <- paste("ucr4", names(ucr_sample[4]), sep = "_")
 
 
 # Fatiamos cada série no mesmo intervalo
 # OBS: ajuste este recorte se o tamanho das séries variar.
-series_ts <- vector("list", length(ucr_sample[[1]]))
+#series_ts <- vector("list", length(ucr_sample[[1]]))
 #series_ts <- vector("list", length(ucr_sample[[2]]))
 #series_ts <- vector("list", length(ucr_sample[[3]]))
-#series_ts <- vector("list", length(ucr_sample[[4]]))
+series_ts <- vector("list", length(ucr_sample[[4]]))
 
 
 for (i in seq_along(series_ts)) {
-  serie_nome <- names(ucr_sample[[1]])[i]
   #serie_nome <- names(ucr_sample[[1]])[i]
-  #serie_nome <- names(ucr_sample[[1]])[i]
-  #serie_nome <- names(ucr_sample[[1]])[i]
+  #serie_nome <- names(ucr_sample[[2]])[i]
+  #serie_nome <- names(ucr_sample[[3]])[i]
+  serie_nome <- names(ucr_sample[[4]])[i]
   
   # Verificação de limites para evitar erro se a série for menor
-  n <- nrow(ucr_sample[[1]][[i]])
+  #n <- nrow(ucr_sample[[1]][[i]])
   #n <- nrow(ucr_sample[[2]][[i]])
   #n <- nrow(ucr_sample[[3]][[i]])
-  #n <- nrow(ucr_sample[[4]][[i]])
+  n <- nrow(ucr_sample[[4]][[i]])
   
   if (is.null(n)) {
     stop(sprintf("Objeto %s não é um data.frame/ts esperado.", serie_nome))
   }
 
   #Trecho ajustado para séries UCR
-  series_ts[[i]] <- ucr_sample[[1]][[i]]
+  #series_ts[[i]] <- ucr_sample[[1]][[i]]
   #series_ts[[i]] <- ucr_sample[[2]][[i]]
   #series_ts[[i]] <- ucr_sample[[3]][[i]]
-  #series_ts[[i]] <- ucr_sample[[4]][[i]]
+  series_ts[[i]] <- ucr_sample[[4]][[i]]
   
   names(series_ts)[i] <- serie_nome
 }
@@ -139,7 +138,7 @@ for (j in seq_along(metodos_ml)) {                 # percorre métodos
   detalhes_todos_ml <- c(detalhes_todos_ml, detalhes_modelo_ml)
 }
 
-#Persistência doss detalhes no agregado geral
+#Persistência dos detalhes no agregado geral
 filename_detalhes <- sprintf("%s_%s_exp_det.RData", nome_base, exp)
 save(detalhes_todos_ml,
      file = file.path("results", filename_detalhes),

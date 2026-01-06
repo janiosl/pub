@@ -6,7 +6,6 @@ library(daltoolboxdp)
 library(tspredit)
 library(harbinger)
 
-
 #Load datasets ----
 library(united)
 
@@ -14,6 +13,7 @@ library(united)
 ## ------------------------------------------------------------
 ## 1) Preparação dos métodos (modelos) ----
 ## ------------------------------------------------------------
+exp <- "ml_methods"
 metodos_ml <- list(
   hanr_ml_conv1d_model <- hanr_ml(ts_conv1d(ts_norm_gminmax(), input_size=4, epochs=5000))  # Método 1: CONV1D
 )
@@ -23,32 +23,30 @@ names(metodos_ml) <- c("ml_conv1d")
 ## ------------------------------------------------------------
 ## 2) Preparação dos dados ----
 ## ------------------------------------------------------------
-dir <- "E:\\Users\\janio\\Documents\\Education\\Mestrado e Doutorado\\CEFET\\Doutorado\\DAL Reuniões\\Autoencoder\\Experiments"
+dir <- "DSc/pipeline_exp"
 setwd(dir=dir)
-load(file="data\\nab_sample.RData")
-#names(nab_sample)
+load(file="data/nab_sample.RData")
 
 #Rodar para cada grupo NAB
-nome_base <- paste("nab1", names(nab_sample[1]), sep = "_")
+#nome_base <- paste("nab1", names(nab_sample[1]), sep = "_")
 #nome_base <- paste("nab2", names(nab_sample[2]), sep = "_")
-#nome_base <- paste("nab3", names(nab_sample[3]), sep = "_")
-
+nome_base <- paste("nab3", names(nab_sample[3]), sep = "_")
 
 # Fatiamos cada série no mesmo intervalo
 # OBS: ajuste este recorte se o tamanho das séries variar.
-series_ts <- vector("list", length(nab_sample[[1]]))
+#series_ts <- vector("list", length(nab_sample[[1]]))
 #series_ts <- vector("list", length(nab_sample[[2]]))
-#series_ts <- vector("list", length(nab_sample[[3]])) 
+series_ts <- vector("list", length(nab_sample[[3]])) 
 
 for (i in seq_along(series_ts)) {
-  serie_nome <- names(nab_sample[[1]])[i]
+  #serie_nome <- names(nab_sample[[1]])[i]
   #serie_nome <- names(nab_sample[[2]])[i]
-  #serie_nome <- names(nab_sample[[3]])[i]
+  serie_nome <- names(nab_sample[[3]])[i]
   
   # Verificação de limites para evitar erro se a série for menor
-  n <- nrow(nab_sample[[1]][[i]])
+  #n <- nrow(nab_sample[[1]][[i]])
   #n <- nrow(nab_sample[[2]][[i]])
-  #n <- nrow(nab_sample[[3]][[i]])
+  n <- nrow(nab_sample[[3]][[i]])
   
   inicio <- 1L
   fim    <- 4032L #NAB 1 e NAB3
@@ -60,9 +58,9 @@ for (i in seq_along(series_ts)) {
     stop(sprintf("Série %s tem apenas %d linhas; ajuste o recorte (%d:%d).",
                  serie_nome, n, inicio, fim))
   }
-  series_ts[[i]] <- nab_sample[[1]][[i]][inicio:fim, ]
+  #series_ts[[i]] <- nab_sample[[1]][[i]][inicio:fim, ]
   #series_ts[[i]] <- nab_sample[[2]][[i]][inicio:fim, ]
-  #series_ts[[i]] <- nab_sample[[3]][[i]][inicio:fim, ]
+  series_ts[[i]] <- nab_sample[[3]][[i]][inicio:fim, ]
   
   names(series_ts)[i] <- serie_nome
 }
@@ -137,6 +135,12 @@ for (j in seq_along(metodos_ml)) {                 # percorre métodos
   detalhes_todos_ml <- c(detalhes_todos_ml, detalhes_modelo_ml)
 }
 
+#Persistência doss detalhes no agregado geral
+filename_detalhes <- sprintf("%s_%s_exp_det.RData", nome_base, exp)
+save(detalhes_todos_ml,
+     file = file.path("results", filename_detalhes),
+     compress = "xz")
+
 
 ## ------------------------------------------------------------
 ## 4) Sumário de desempenho (tempo e métricas) ----
@@ -171,9 +175,7 @@ resumo_experimentos_ml <- do.call(rbind, linhas_resumo_ml)
 ## ------------------------------------------------------------
 ## 5) Persistência do sumário ----
 ## ------------------------------------------------------------
-exp <- "ml_methods"
 filename <- sprintf("%s_%s_exp_summary.RData", nome_base, exp)
-
 save(resumo_experimentos_ml,
      file = file.path("results", filename),
      compress = "xz")

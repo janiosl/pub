@@ -6,7 +6,6 @@ library(daltoolboxdp)
 library(tspredit)
 library(harbinger)
 
-
 #Load datasets ----
 library(united)
 
@@ -14,6 +13,8 @@ library(united)
 ## ------------------------------------------------------------
 ## 1) Preparação dos métodos (modelos) ----
 ## ------------------------------------------------------------
+exp <- "ml_methods"
+
 metodos_ml <- list(
   hanr_ml_conv1d_model <- hanr_ml(ts_conv1d(ts_norm_gminmax(), input_size=4, epochs=5000))  # Método 1: CONV1D
 )
@@ -23,15 +24,17 @@ names(metodos_ml) <- c("ml_conv1d")
 ## ------------------------------------------------------------
 ## 2) Preparação dos dados ----
 ## ------------------------------------------------------------
-dir <- "E:\\Users\\janio\\Documents\\Education\\Mestrado e Doutorado\\CEFET\\Doutorado\\DAL Reuniões\\Autoencoder\\Experiments"
+dir <- "DSc/pipeline_exp"
 setwd(dir=dir)
+#load(file="data/gecco_sample.RData")
+data(gecco)  # carrega a base 'gecco' no ambiente
 
 nome_base <- "gecco"
-data(gecco)  # carrega a base 'gecco' no ambiente
 
 # Fatiamos cada série no mesmo intervalo [16500:18000]
 # OBS: ajuste este recorte se o tamanho das séries variar.
 series_ts <- vector("list", length(gecco) - 1)
+
 for (i in seq_along(series_ts)) {
   serie_nome <- names(gecco)[i]
   # Verificação de limites para evitar erro se a série for menor
@@ -48,7 +51,6 @@ for (i in seq_along(series_ts)) {
   series_ts[[i]] <- gecco[[i]][inicio:fim, ]
   names(series_ts)[i] <- serie_nome
 }
-
 
 ## Garante diretório de resultados
 dir.create("results", showWarnings = FALSE, recursive = TRUE)
@@ -123,6 +125,12 @@ for (j in seq_along(metodos_ml)) {                 # percorre métodos
   detalhes_todos_ml <- c(detalhes_todos_ml, detalhes_modelo_ml)
 }
 
+#Persistência dos detalhes no agregado geral
+filename_detalhes <- sprintf("%s_%s_exp_det.RData", nome_base, exp)
+save(detalhes_todos_ml,
+     file = file.path("results", filename_detalhes),
+     compress = "xz")
+
 
 ## ------------------------------------------------------------
 ## 4) Sumário de desempenho (tempo e métricas) ----
@@ -157,9 +165,7 @@ resumo_experimentos_ml <- do.call(rbind, linhas_resumo_ml)
 ## ------------------------------------------------------------
 ## 5) Persistência do sumário ----
 ## ------------------------------------------------------------
-exp <- "ml_methods"
 filename <- sprintf("%s_%s_exp_summary.RData", nome_base, exp)
-
 save(resumo_experimentos_ml,
      file = file.path("results", filename),
      compress = "xz")

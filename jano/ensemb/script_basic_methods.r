@@ -2,10 +2,8 @@
 
 #Load libraries ----
 library(daltoolbox)
-library(daltoolboxdp)
 library(tspredit)
 library(harbinger)
-
 
 #Load datasets ----
 library(united)
@@ -14,24 +12,30 @@ library(united)
 ## ------------------------------------------------------------
 ## 1) Preparação dos métodos (modelos) ----
 ## ------------------------------------------------------------
+exp <- "basic_methods"
+
 metodos <- list(
   hanr_arima(),   # Método 1: ARIMA
-  hanr_fbiad(),  # Método 2: FBIAD
-  #hanr_rtad()  # Método 3: RTAD
-)
-#names(metodos) <- c("fbiad", "arima", "rtad")
+  hanr_fbiad()  # Método 2: FBIAD
+  )
+
 names(metodos) <- c("fbiad", "arima")
 
 
 ## ------------------------------------------------------------
 ## 2) Preparação dos dados ----
 ## ------------------------------------------------------------
-nome_base <- "gecco"
+dir <- "DSc/pipeline_exp"
+setwd(dir=dir)
+#load(file="data/gecco_sample.RData")
 data(gecco)  # carrega a base 'gecco' no ambiente
+
+nome_base <- "gecco"
 
 # Fatiamos cada série no mesmo intervalo [16500:18000]
 # OBS: ajuste este recorte se o tamanho das séries variar.
 series_ts <- vector("list", length(gecco) - 1)
+
 for (i in seq_along(series_ts)) {
   serie_nome <- names(gecco)[i]
   # Verificação de limites para evitar erro se a série for menor
@@ -114,6 +118,12 @@ for (j in seq_along(metodos)) {                 # percorre métodos
   detalhes_todos <- c(detalhes_todos, detalhes_modelo)
 }
 
+#Persistência dos detalhes no agregado geral
+filename_detalhes <- sprintf("%s_%s_exp_det.RData", nome_base, exp)
+save(detalhes_todos,
+     file = file.path("results", filename_detalhes),
+     compress = "xz")
+
 
 ## ------------------------------------------------------------
 ## 4) Sumário de desempenho (tempo e métricas) ----
@@ -148,9 +158,7 @@ resumo_experimentos <- do.call(rbind, linhas_resumo)
 ## ------------------------------------------------------------
 ## 5) Persistência do sumário ----
 ## ------------------------------------------------------------
-exp <- "basic_methods"
 filename <- sprintf("%s_%s_exp_summary.RData", nome_base, exp)
-
 save(resumo_experimentos,
      file = file.path("results", filename),
      compress = "xz")
